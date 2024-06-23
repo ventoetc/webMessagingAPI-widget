@@ -22,6 +22,33 @@ function clearToken() {
   localStorage.removeItem('gc_webtoken')
   window.location.reload()
 }
+function endConversation() {
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    let json = {
+      action: 'disconnect',
+      token: localStorage.getItem('gc_webtoken'),
+    };
+    socket.send(JSON.stringify(json));
+    console.log('Conversation ended');
+
+    // Commit the transcription and finalize the interaction
+    commitTranscriptionAndFinalize();
+
+    // Give a brief delay to ensure the message is sent before redirecting
+    setTimeout(() => {
+      // Redirect to the survey URL
+      window.location.href = 'https://yoursurveyurl.com';
+    }, 500); // Adjust delay as needed
+  } else {
+    console.error('WebSocket is not open');
+  }
+}
+
+function commitTranscriptionAndFinalize() {
+  // Implement the logic to commit the transcription
+  console.log('Transcription committed and interaction finalized');
+  // Add any additional logic required to wrap up the interaction
+}
 
 function openChat() {
   document.getElementById('widget').className = 'toast show'
